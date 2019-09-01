@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Recurso;
+use App\Persona;
+use App\Asignacion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -27,7 +29,8 @@ class RecursoController extends Controller
     {
        
         $datos = Recurso::all();
-        return view('recurso/recurso')->with(['datos' => $datos]);;
+        $personas = Persona::all();
+        return view('recurso/recurso')->with(['datos' => $datos, 'personas'=> $personas]);
     }
 
     public function create()
@@ -43,7 +46,7 @@ class RecursoController extends Controller
      */
     public function store(Request $request)
     {
-        
+       
         $nuevoRecurso = new Recurso;
         $data= request()->validate([
             'categoria' => 'required',
@@ -59,9 +62,30 @@ class RecursoController extends Controller
         $nuevoRecurso->nombre = $request->nombre;
         $nuevoRecurso->marca = $request->marca;
         $nuevoRecurso->serie = $request->serie;
+        
         $nuevoRecurso->save();
         return back()->with('agregar' , 'El recurso se ha agregado correctamente');
     }
+
+    public function asignarProduct(Request $request)
+    {
+    
+        $nuevaAsignacion = new Asignacion;
+     
+        if ($nuevaAsignacion->where('id_recurso', '=', $request->id_recurso)->where('id_persona','=', $request->selectPerson)->exists()) { 
+
+        return back()->with('message' , 'Este recurso ya se encuentra asignado');
+     
+    }
+       
+        
+        $nuevaAsignacion->id_recurso= $request->id_recurso;
+        $nuevaAsignacion->id_persona= $request->selectPerson;
+        $nuevaAsignacion->save();
+
+        return back()->with('success' , 'El recurso se ha agregado correctamente');
+    }
+
     public function show(Nota $nota)
     {
         //
@@ -111,4 +135,6 @@ class RecursoController extends Controller
         $recursoEliminar->delete();
         return back()->with('recurso' , 'La persona ha sido eliminada correctamente') ;
     }
+
+  
 }

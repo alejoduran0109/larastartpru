@@ -8,7 +8,18 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Ingresar Recursos</h3>
                 </div>
+                @if (session('message'))
+                <div class="alert alert-error mt-3">
+                    {{session('message')}}
+                </div>
+            @endif
 
+            @if (session('success'))
+                <div class="alert alert-success mt-3">
+                    {{session('success')}}
+                </div>
+            @endif
+            
                 @if($errors->all())
                 <div class="alert alert-error" role="alert">
                     @foreach ($errors->all() as $error)
@@ -70,6 +81,7 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th style="display:none">ID</th>
                                     <th>Categoria</th>
                                     <th>Codigo</th>
                                     <th>Nombre</th>
@@ -81,6 +93,7 @@
                             <tbody>
                             @foreach ($datos as $item)
                             <tr>
+                                    <td style="display:none">{{$item->id}}</td>
                                     <td>{{$item->categoria}}</td>
                                     <td>{{$item->codigo}}</td>
                                     <td>{{$item->nombre}}</td>
@@ -91,10 +104,51 @@
                             <form action="{{route('eliminar' , $item->id)}}" method="POST" class="d-inline">
                                 @method('DELETE')
                                 @csrf
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                <button type="submit" href="{{$item->id}}" class="btn btn-danger">Eliminar</button>
                             </form>
-                        </td>
+                            <button type="submit" data-toggle="modal" data-target="#modal-default{{$item->id}}" onclick="{{$item->id}}" class="btn btn-danger">Asignar</button>                        </td>
                                 </tr>
+                                <div class="modal fade" id="modal-default{{$item->id}}">
+                                    <script>
+
+                                    </script>
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">Asignar Recurso</h4>
+                                            </div>
+                                            <form action="{{route('asignar')}}" method="POST">
+                                                @csrf
+                                                <div class="modal-body">
+                                                    <input type="hidden" class="form-control" name="id_recurso" id="id_recurso" value="{{ $item->id }}" required>
+
+                                                    <div class="form-group">
+                                                        <label for="recurso">Recurso</label>
+                                                        <input type="text" readonly="readonly" value="{{ $item->nombre }}" class="form-control" name="recurso" id="recurso" placeholder="Ingresar Categoria" required>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Persona</label>
+                                                        <select class="form-control select2" name="selectPerson" id="selectPerson" style="width: 100%;">
+                                                            @foreach ($personas as $person)
+                                                            <option value="{{ $person->id }}">{{$person->nombres}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                                <!-- /.modal -->
                 @endforeach
 
 
@@ -111,18 +165,81 @@
 </div>
 </div>
 
+<div class="modal fade" id="modal-default" >
+    
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Asignar Recurso</h4>
+              </div>
+              <form action="{{route('asignar')}}" method="POST">
+              @csrf 
+              <div class="modal-body">
+              <input type="hidden" class="form-control" name="id_recurso" id="id_recurso" value="{{ $item->id }}" required>
+
+              <div class="form-group">
+                            <label for="recurso">Recurso</label>
+                            <input type="text"  readonly="readonly" value="{{ $item->nombre }}" class="form-control" name="recurso" id="recurso" placeholder="Ingresar Categoria" required>
+                        </div>
+
+                        <div class="form-group">
+                             <label>Persona</label>
+                <select class="form-control select2"  name="selectPerson" id="selectPerson" style="width: 100%;">
+                @foreach ($personas as $person)
+                  <option value="{{ $person->id }}" >{{$person->nombres}}</option>
+                  @endforeach
+                </select>
+                        </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+              </form>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
 @endsection
 @section('js')
+
+
 <script>
+     //Initialize Select2 Elements
+     $('.select2').select2()
+     
     $(function() {
-        $('#example1').DataTable({
-            'paging': true,
-            'lengthChange': false,
-            'searching': true,
-            'ordering': true,
-            'info': true,
-            'autoWidth': false
-        })
+        $('#example1').DataTable( {
+    language: {
+        "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+        "sFirst":    "Primero",
+        "sLast":     "Último",
+        "sNext":     "Siguiente",
+        "sPrevious": "Anterior"
+        },
+        aria: {
+            sortAscending:  ": activer pour trier la colonne par ordre croissant",
+            sortDescending: ": activer pour trier la colonne par ordre décroissant"
+        }
+    }
+} );
     })
 </script>
 
@@ -132,5 +249,6 @@
 @endsection
 @section('css')
 <link rel="stylesheet" href="css/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<link rel="stylesheet" href="/css/admin_custom.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="assets/select2/dist/css/select2.min.css">
 @stop

@@ -43,4 +43,10 @@ Route::put('/updateProduc/{id}' , 'RecursoController@update')->name('update');
 
 Route::delete('/eliminarProduc/{id}' , 'RecursoController@destroy')->name('eliminar');
 
+Route::post('/asignarProduc' , 'RecursoController@asignarProduct')->name('asignar');
+
+
+Route::get('asignacion', 'AsignacionController@index')->name('home');
+
+
 
