@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Ingresar Persona</h3>
+                    <h3 class="box-title">Ingresar Recursos Multiple</h3>
                 </div>
                
                 @if (session('message'))
@@ -29,16 +29,25 @@
 
                     <div class="box-body">
                         <div class="form-group">
-                            <label for="identificacion">Identificacion</label>
-                            <input type="text" class="form-control" name="identificacion" id="identificacion" placeholder="Ingresar identificacion" required>
+                            <label>Persona</label>
+                            <select class="form-control select2"  data-placeholder="Select a State"  style="width: 100%;">
+                              
+                                <option value=""></option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="nombres">Nombres</label>
-                            <input type="text" class="form-control" name="nombres" id="nombres" placeholder="Ingresar Nombres" required>
+                            <label for="nombres">Recursos</label>
+                            <select class="form-control select2" multiple="multiple" data-placeholder="Select a State"  style="width: 100%;">
+                              
+                                    <option value=""></option>
+                                </select>
                         </div>
                         <div class="form-group">
-                            <label for="apellidos">Apellidos</label>
-                            <input type="apellidos" class="form-control" id="apellidos" name="apellidos" placeholder="Ingresar Apellidos">
+                            <label for="apellidos">Persona a Asignar</label>
+                            <select class="form-control select2"  data-placeholder="Select a State"  style="width: 100%;">
+                              
+                                    <option value=""></option>
+                                </select>
                         </div>
 
                     </div>
@@ -51,21 +60,34 @@
 
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Listado Personas</h3>
+                        <h3 class="box-title">Listado Personas con recursos asginados</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Identificacion</th>
-                                    <th>Nombres</th>
-                                    <th>Apellidos</th>
+                                    <th>Recurso</th>
+                                    <th>Asignado a</th>
+                                    <th>Fecha</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-       
+                                    @foreach ($datos as $item)
+                                    <tr>
+                                            <td>{{$item->nombre}}</td>
+                                            <td>{{$item->nombrePer}}</td>
+                                            <td>{{$item->created_at}}</td>
+                                            <td>
+                                    <form action="{{route('eliminar' , $item->id)}}" method="POST" class="d-inline">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger "><i class="fas fa-fw fa-close "></i>Eliminar</button>
+                                    </form>
+                                </td>
+                                        </tr>
+                        @endforeach
         
                                 </tfoot>
                         </table>
@@ -83,6 +105,7 @@
 @endsection
 @section('js')
 <script>
+     $('.select2').select2()
     $(function() {
         $('#example1').DataTable( {
     language: {
@@ -119,5 +142,7 @@
 @endsection
 @section('css')
 <link rel="stylesheet" href="css/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/Ionicons/css/ionicons.min.css">
 <link rel="stylesheet" href="/css/admin_custom.css">
 @stop

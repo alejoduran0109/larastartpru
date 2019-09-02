@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Recurso;
 use App\Persona;
+use Illuminate\Support\Facades\DB;
 use App\Asignacion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,9 +28,15 @@ class AsignacionController extends Controller
      */
     public function index()
     {
-       
+        $datos = DB::table('asignacion')
+            ->join('person', 'asignacion.id_persona', '=', 'person.id')
+            ->join('resource', 'asignacion.id_recurso', '=', 'resource.id')
+            ->select('asignacion.*', 'person.nombres AS nombrePer', 'resource.nombre')
+            ->get();
 
-        return view('asignacion/asignacion');
+          
+
+        return view('asignacion/asignacion')->with(['datos' => $datos]);;
     }
 
     public function create()
@@ -46,23 +53,7 @@ class AsignacionController extends Controller
     public function store(Request $request)
     {
        
-        $nuevoRecurso = new Recurso;
-        $data= request()->validate([
-            'categoria' => 'required',
-            'codigo' => 'required',
-            'nombre' => 'required',
-        ], [
-            'nombre.required' => 'El campo Apellidos es obligatorio',
-        ]);
-
-
-        $nuevoRecurso->categoria = $request->categoria;
-        $nuevoRecurso->codigo = $request->codigo;
-        $nuevoRecurso->nombre = $request->nombre;
-        $nuevoRecurso->marca = $request->marca;
-        $nuevoRecurso->serie = $request->serie;
-        $nuevoRecurso->save();
-        return back()->with('agregar' , 'El recurso se ha agregado correctamente');
+    
     }
 
     public function asignarProduct(Request $request)
