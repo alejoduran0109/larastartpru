@@ -23,13 +23,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('user', 'PersonController@index');
 
-Route::post('/agregar' , 'PersonController@store')->name('store');
+Route::post('/agregar' , 'PersonController@store')->name('storePer');
 
-Route::get('/editar/{id}' , 'PersonController@edit')->name('editar');
+Route::get('/editar/{id}' , 'PersonController@edit')->name('editarPer');
 
-Route::put('/update/{id}' , 'PersonController@update')->name('update');
+Route::put('/update/{id}' , 'PersonController@update')->name('updatePer');
 
-Route::delete('/eliminar/{id}' , 'PersonController@destroy')->name('eliminar');
+Route::delete('/eliminar/{id}' , 'PersonController@destroy')->name('eliminarPer');
 
 
 

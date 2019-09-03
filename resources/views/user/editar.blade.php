@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
 @section('content')
-    <h3 class="text-center mb-3 pt-3">Editar la nota {{$personActualizar->id}}</h3>
+    <h3 class="text-center mb-3 pt-3">Editar Usuario:{{$personActualizar->id}}</h3>
 
-    <form action="{{route('update' , $personActualizar->id)}}" method="POST">
+    <form action="{{route('updatePer' , $personActualizar->id)}}" method="POST">
         @method('PUT')
         @csrf
 
@@ -19,7 +19,7 @@
             <input type="text" name="apellidos" id="apellidos" value="{{$personActualizar->apellidos}}" class="form-control">
         </div>
 
-        <button type="submit" class="btn btn-warning btn-block">Editar nota</button>
+        <button type="submit" class="btn btn-warning btn-block">Editar Persona</button>
     </form>
     @if (session('update'))
         <div class="alert alert-success mt-3">

@@ -106,7 +106,7 @@
                                 @csrf
                                 <button type="submit" href="{{$item->id}}" class="btn btn-danger">Eliminar</button>
                             </form>
-                            <button type="submit" data-toggle="modal" data-target="#modal-default{{$item->id}}" onclick="{{$item->id}}" class="btn btn-danger">Asignar</button>                        </td>
+                            <button type="submit" data-toggle="modal" data-target="#modal-default{{$item->id}}" onclick="{{$item->id}}" class="btn btn-primary">Asignar</button>                        </td>
                                 </tr>
                                 <div class="modal fade" id="modal-default{{$item->id}}">
                                     <script>

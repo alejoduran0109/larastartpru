@@ -18,7 +18,7 @@
                 @endif
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form action="{{route('store')}}" method="POST">
+                <form action="{{route('storePer')}}" method="POST">
                     @csrf
 
                     <div class="box-body">
@@ -67,8 +67,8 @@
                                     </td>
                                     <td>{{$item->apellidos}}</td>
                                     <td>
-                            <a href="{{route('editar' , $item->id)}}" class="btn btn-warning">Editar</a>
-                            <form action="{{route('eliminar' , $item->id)}}" method="POST" class="d-inline">
+                            <a href="{{route('editarPer' , $item->id)}}" class="btn btn-warning">Editar</a>
+                            <form action="{{route('eliminarPer' , $item->id)}}" method="POST" class="d-inline">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger">Eliminar</button>
